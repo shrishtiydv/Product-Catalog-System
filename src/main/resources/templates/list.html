@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #f0f8ff;
+        }
+        th, td {
+            padding: 12px 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background-color: #0074D9;
+            color: white;
+        }
+        h1, .btn, .filter-form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn a, .filter-form button, .filter-form a {
+            padding: 8px 16px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 15px;
+            margin: 0 5px;
+        }
+        .btn a:hover, .filter-form button:hover, .filter-form a:hover {
+            background-color: #218838;
+        }
+        .delete-btn {
+            color: red;
+            text-decoration: none;
+        }
+        select {
+            padding: 8px;
+            font-size: 15px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Product Catalog</h1>
+
+    <!-- Filter Form -->
+    <form class="filter-form" th:action="@{/products/category/__category__}" method="get"
+          onsubmit="this.action=this.action.replace('__category__', this.category.value)">
+        <label for="category">Filter by Category:</label>
+        <select name="category" id="category">
+            <option value="" th:selected="${selectedCategory} == null">All</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat}"
+                    th:text="${cat}"
+                    th:selected="${cat == selectedCategory}">
+            </option>
+        </select>
+        <button type="submit">Filter</button>
+        <a href="/products">Show All</a>
+    </form>
+
+    <!-- Add New Product Button -->
+    <div class="btn">
+        <a href="/product/new">Add New Product</a>
+    </div>
+
+    <!-- Product Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price (₹)</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.id}"></td>
+                <td th:text="${product.name}"></td>
+                <td th:text="${product.category}"></td>
+                <td th:text="${product.price}"></td>
+                <td th:text="${product.quantity}"></td>
+                <td>
+                    <a th:href="@{'/product/' + ${product.id}}">Edit</a> |
+                    <a th:href="@{'/product/delete/' + ${product.id}}" class="delete-btn"
+                       onclick="return confirm('Are you sure you want to delete this product?')">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
